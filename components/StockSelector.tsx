@@ -19,7 +19,7 @@ const StyledPopper = styled(Popper)({
 export default function StockSelector({
   onStockChange
 }: {
-  onStockChange?: (stockId: string) => void
+  onStockChange?: (stock: IStock) => void
 }) {
   const [stocks, setStocks] = useState<IStock[]>([])
   // const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
@@ -93,7 +93,7 @@ export default function StockSelector({
           component: ListboxComponent
         }
       }}
-      onChange={(_, value) => onStockChange?.(value?.stock_id || '')}
+      onChange={(_, value) => onStockChange?.(value as IStock)}
     />
   )
 }
