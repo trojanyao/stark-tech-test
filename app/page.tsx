@@ -8,6 +8,7 @@ import Title from './components/Title'
 
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import { Chart } from './components/Chart'
 
 export default function Page() {
   const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
@@ -36,9 +37,7 @@ export default function Page() {
           <Title selectedStock={selectedStock} />
 
           {/* Chart */}
-          <Card>
-            <CardContent></CardContent>
-          </Card>
+          <Chart />
 
           {/* Table */}
           <Card>
