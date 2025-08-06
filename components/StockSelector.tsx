@@ -4,6 +4,8 @@ import { Autocomplete, autocompleteClasses, Popper, styled, TextField } from '@m
 import { useEffect, useState } from 'react'
 import { ListboxComponent } from './VirtualizedListbox'
 
+import { SearchOutlined } from '@mui/icons-material'
+
 const StyledPopper = styled(Popper)({
   [`& .${autocompleteClasses.listbox}`]: {
     boxSizing: 'border-box',
@@ -20,6 +22,7 @@ export default function StockSelector({
   onStockChange?: (stockId: string) => void
 }) {
   const [stocks, setStocks] = useState<IStock[]>([])
+  // const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
 
   /* Get and set stock list */
   useEffect(() => {
@@ -32,13 +35,15 @@ export default function StockSelector({
         const result = await response.json()
 
         setStocks(result?.data || [])
+        // setSelectedStock(result?.data?.[0])
+        // onStockChange?.(result?.data?.[0]?.stock_id)
       } catch (error) {
         console.error('Error fetching stocks:', error)
       }
     }
 
     fetchStocks()
-  }, [])
+  }, [onStockChange])
 
   return (
     <Autocomplete
@@ -54,6 +59,7 @@ export default function StockSelector({
         //   boxSizing: 'border-box'
         // }
       }}
+      // value={selectedStock}
       options={stocks}
       getOptionLabel={(option) => `${option?.stock_name} (${option?.stock_id})`}
       renderInput={(params) => (
@@ -73,10 +79,16 @@ export default function StockSelector({
         />
       )}
       renderOption={(props, option, state) => [props, option, state.index] as React.ReactNode}
+      popupIcon={<SearchOutlined />}
       slots={{
         popper: StyledPopper
       }}
       slotProps={{
+        popupIndicator: {
+          sx: {
+            transform: 'none !important'
+          }
+        },
         listbox: {
           component: ListboxComponent
         }
