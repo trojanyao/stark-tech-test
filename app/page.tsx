@@ -6,10 +6,9 @@ import { useEffect, useState } from 'react'
 
 import Title from './components/Title'
 
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import { Chart } from './components/Chart'
 import ChartTimeRangeSelector from './components/ChartTimeRangeSelector'
+import DataTable from './components/DataTable'
 
 export default function Page() {
   const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
@@ -109,9 +108,7 @@ export default function Page() {
           </Chart>
 
           {/* Table */}
-          <Card>
-            <CardContent></CardContent>
-          </Card>
+          <DataTable rawData={revenueData} />
         </Stack>
       </Container>
     </Stack>

@@ -70,7 +70,7 @@ export function Chart({ dataset, children }: { dataset: IRevenue[]; children: Re
                 label: '單月營收年增率',
                 yAxisId: 'right-rate-axis',
                 color: '#0d47a1',
-                valueFormatter: (value) => (value ? `${value.toFixed(1)}%` : '无数据')
+                valueFormatter: (value) => (value ? `${value.toFixed(2)}%` : '无数据')
               }
             ]}
           >
