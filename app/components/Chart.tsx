@@ -31,82 +31,11 @@ export function Chart({ dataset, children }: { dataset: IRevenue[]; children: Re
             {children}
           </Stack>
 
-          <Box position="relative">
+          <Box position="relative" height={300}>
             {/* Chart */}
-            <ChartDataProvider
-              height={300}
-              dataset={formattedDataset}
-              margin={{ top: 20, left: 0, bottom: 0, right: 0 }}
-              xAxis={[
-                {
-                  id: 'month',
-                  dataKey: 'date',
-                  scaleType: 'band',
-                  valueFormatter: (value: string) => String(value).slice(0, 7)
-                }
-              ]}
-              yAxis={[
-                {
-                  id: 'left-revenue-axis',
-                  scaleType: 'linear',
-                  position: 'left',
-                  width: 80
-                },
-                {
-                  id: 'right-rate-axis',
-                  scaleType: 'linear',
-                  position: 'right',
-                  width: 65
-                }
-              ]}
-              series={[
-                {
-                  type: 'bar',
-                  dataKey: 'revenue',
-                  label: '每月營收',
-                  yAxisId: 'left-revenue-axis',
-                  color: '#90caf9',
-                  valueFormatter: (value) => `${value} 千元`
-                },
-                {
-                  type: 'line',
-                  dataKey: 'growth_rate',
-                  label: '單月營收年增率',
-                  yAxisId: 'right-rate-axis',
-                  color: '#0d47a1',
-                  valueFormatter: (value) => (value ? `${value.toFixed(2)}%` : '无数据')
-                }
-              ]}
-            >
-              <ChartsLegend direction="horizontal" />
 
-              <ChartsSurface>
-                <BarPlot />
-                <LinePlot />
-                <ChartsXAxis />
-                <ChartsYAxis
-                  axisId="left-revenue-axis"
-                  label="千元"
-                  labelStyle={{
-                    transform: 'rotate(0)', // horizontal
-                    textAnchor: 'start'
-                  }}
-                />
-                <ChartsYAxis
-                  axisId="right-rate-axis"
-                  label="%"
-                  labelStyle={{
-                    transform: 'rotate(0)', // horizontal
-                    textAnchor: 'end'
-                  }}
-                />
-                <ChartsTooltip trigger="axis" />
-                <ChartsAxisHighlight x="line" y="none" />
-              </ChartsSurface>
-            </ChartDataProvider>
-
-            {/* Loading */}
-            {loading && (
+            {loading ? (
+              // Loading
               <Box
                 position="absolute"
                 top={0}
@@ -122,6 +51,92 @@ export function Chart({ dataset, children }: { dataset: IRevenue[]; children: Re
               >
                 <CircularProgress />
                 <Typography mt={2}>資料加載中...</Typography>
+              </Box>
+            ) : dataset?.length > 0 ? (
+              <ChartDataProvider
+                height={300}
+                dataset={formattedDataset}
+                margin={{ top: 20, left: 0, bottom: 10, right: 0 }}
+                xAxis={[
+                  {
+                    id: 'month',
+                    dataKey: 'date',
+                    scaleType: 'band',
+                    valueFormatter: (value: string) => String(value).slice(0, 7)
+                  }
+                ]}
+                yAxis={[
+                  {
+                    id: 'left-revenue-axis',
+                    scaleType: 'linear',
+                    position: 'left',
+                    width: 80
+                  },
+                  {
+                    id: 'right-rate-axis',
+                    scaleType: 'linear',
+                    position: 'right',
+                    width: 65
+                  }
+                ]}
+                series={[
+                  {
+                    type: 'bar',
+                    dataKey: 'revenue',
+                    label: '每月營收',
+                    yAxisId: 'left-revenue-axis',
+                    color: '#90caf9',
+                    valueFormatter: (value) => `${value} 千元`
+                  },
+                  {
+                    type: 'line',
+                    dataKey: 'growth_rate',
+                    label: '單月營收年增率',
+                    yAxisId: 'right-rate-axis',
+                    color: '#0d47a1',
+                    valueFormatter: (value) => (value ? `${value.toFixed(2)}%` : '无数据')
+                  }
+                ]}
+              >
+                <ChartsLegend direction="horizontal" />
+
+                <ChartsSurface>
+                  <BarPlot />
+                  <LinePlot />
+                  <ChartsXAxis />
+                  <ChartsYAxis
+                    axisId="left-revenue-axis"
+                    label="千元"
+                    labelStyle={{
+                      transform: 'rotate(0)', // horizontal
+                      textAnchor: 'start'
+                    }}
+                  />
+                  <ChartsYAxis
+                    axisId="right-rate-axis"
+                    label="%"
+                    labelStyle={{
+                      transform: 'rotate(0)', // horizontal
+                      textAnchor: 'end'
+                    }}
+                  />
+                  <ChartsTooltip trigger="axis" />
+                  <ChartsAxisHighlight x="line" y="none" />
+                </ChartsSurface>
+              </ChartDataProvider>
+            ) : (
+              // Empty
+              <Box
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  color: 'text.secondary',
+                  fontSize: 16
+                }}
+              >
+                暂无数据
               </Box>
             )}
           </Box>

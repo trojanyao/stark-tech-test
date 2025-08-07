@@ -2,7 +2,7 @@
 
 import SectionTitle from '@/components/SectionTitle'
 import { useLoading } from '@/contexts/LoadingContext'
-import { Card, CardContent, Stack } from '@mui/material'
+import { Box, Card, CardContent, Stack } from '@mui/material'
 import {
   DataGrid,
   GridColDef,
@@ -37,7 +37,7 @@ export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
     { id: 'rate', label: '單月營收年增率 (%)' } as Record<string, unknown>
   )
 
-  const rows = [revenueRow, rateRow]
+  const rows = rawData?.length ? [revenueRow, rateRow] : []
 
   const dynamicCols: GridColDef[] = dates.map((date) => ({
     field: date,
@@ -93,6 +93,9 @@ export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
               disableRowSelectionOnClick
               hideFooter
               hideFooterPagination
+              slots={{
+                noRowsOverlay: !loading ? CustomNoRowsOverlay : () => null
+              }}
               slotProps={{
                 cell: { onClick: (e) => e.stopPropagation() }
               }}
@@ -101,5 +104,22 @@ export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
         </Stack>
       </CardContent>
     </Card>
+  )
+}
+
+function CustomNoRowsOverlay() {
+  return (
+    <Box
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        fontSize: 16,
+        color: '#999'
+      }}
+    >
+      暂无数据
+    </Box>
   )
 }
