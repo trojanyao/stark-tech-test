@@ -36,22 +36,7 @@ export function Chart({ dataset, children }: { dataset: IRevenue[]; children: Re
 
             {loading ? (
               // Loading
-              <Box
-                position="absolute"
-                top={0}
-                left={0}
-                right={0}
-                bottom={0}
-                zIndex={10}
-                bgcolor="rgba(255,255,255,0.6)"
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <CircularProgress />
-                <Typography mt={2}>資料加載中...</Typography>
-              </Box>
+              <Loading />
             ) : dataset?.length > 0 ? (
               <ChartDataProvider
                 height={300}
@@ -126,22 +111,49 @@ export function Chart({ dataset, children }: { dataset: IRevenue[]; children: Re
               </ChartDataProvider>
             ) : (
               // Empty
-              <Box
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  color: 'text.secondary',
-                  fontSize: 16
-                }}
-              >
-                暂无数据
-              </Box>
+              <Empty />
             )}
           </Box>
         </Stack>
       </CardContent>
     </Card>
+  )
+}
+
+function Loading() {
+  return (
+    <Box
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      zIndex={10}
+      bgcolor="rgba(255,255,255,0.6)"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <CircularProgress />
+      <Typography mt={2}>資料加載中...</Typography>
+    </Box>
+  )
+}
+
+function Empty() {
+  return (
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'text.secondary',
+        fontSize: 16
+      }}
+    >
+      暂无数据
+    </Box>
   )
 }
