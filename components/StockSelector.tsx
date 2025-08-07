@@ -22,7 +22,7 @@ export default function StockSelector({
   onStockChange?: (stock: IStock) => void
 }) {
   const [stocks, setStocks] = useState<IStock[]>([])
-  // const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
+  const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
 
   /* Get and set stock list */
   useEffect(() => {
@@ -35,15 +35,16 @@ export default function StockSelector({
         const result = await response.json()
 
         setStocks(result?.data || [])
-        // setSelectedStock(result?.data?.[0])
-        // onStockChange?.(result?.data?.[0]?.stock_id)
+        setSelectedStock(result?.data?.[0])
+        onStockChange?.(result?.data?.[0])
       } catch (error) {
-        console.error('Error fetching stocks:', error)
+        throw new Error(`Error fetching stocks: ${error}`)
       }
     }
 
     fetchStocks()
-  }, [onStockChange])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Autocomplete
@@ -59,7 +60,7 @@ export default function StockSelector({
         //   boxSizing: 'border-box'
         // }
       }}
-      // value={selectedStock}
+      value={selectedStock}
       options={stocks}
       getOptionLabel={(option) => `${option?.stock_name} (${option?.stock_id})`}
       renderInput={(params) => (
@@ -93,7 +94,10 @@ export default function StockSelector({
           component: ListboxComponent
         }
       }}
-      onChange={(_, value) => onStockChange?.(value as IStock)}
+      onChange={(_, value) => {
+        setSelectedStock(value as IStock)
+        onStockChange?.(value as IStock)
+      }}
     />
   )
 }
