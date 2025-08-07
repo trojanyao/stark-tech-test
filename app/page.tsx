@@ -9,8 +9,11 @@ import Title from './components/Title'
 import { Chart } from './components/Chart'
 import ChartTimeRangeSelector from './components/ChartTimeRangeSelector'
 import DataTable from './components/DataTable'
+import { useLoading } from '@/contexts/LoadingContext'
 
 export default function Page() {
+  const { setLoading } = useLoading()
+
   const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
 
   const [{ start_date, end_date }, setTimeRange] = useState<{
@@ -24,6 +27,8 @@ export default function Page() {
   useEffect(() => {
     async function getSelectedStockData() {
       if (!selectedStock?.stock_id) return
+
+      setLoading(true)
 
       try {
         const params = new URLSearchParams({
@@ -42,6 +47,8 @@ export default function Page() {
 
         const res = await fetch(`/api/finmind?${params.toString()}`)
         const result = await res.json()
+
+        setLoading(false)
 
         const newData =
           result?.data?.map((item: IRevenue) => {
@@ -75,7 +82,7 @@ export default function Page() {
     }
 
     getSelectedStockData()
-  }, [selectedStock?.stock_id, start_date, end_date])
+  }, [selectedStock?.stock_id, start_date, end_date, setLoading])
 
   return (
     <Stack spacing={0} className="h-screen">

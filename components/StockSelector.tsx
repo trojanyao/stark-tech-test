@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { ListboxComponent } from './VirtualizedListbox'
 
 import { SearchOutlined } from '@mui/icons-material'
+import { useLoading } from '@/contexts/LoadingContext'
 
 const StyledPopper = styled(Popper)({
   [`& .${autocompleteClasses.listbox}`]: {
@@ -21,6 +22,8 @@ export default function StockSelector({
 }: {
   onStockChange?: (stock: IStock) => void
 }) {
+  const { setLoading } = useLoading()
+
   const [stocks, setStocks] = useState<IStock[]>([])
   const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
 
@@ -34,6 +37,8 @@ export default function StockSelector({
         }
         const result = await response.json()
 
+        setLoading(false)
+
         setStocks(result?.data || [])
         setSelectedStock(result?.data?.[0])
         onStockChange?.(result?.data?.[0])
@@ -43,6 +48,7 @@ export default function StockSelector({
     }
 
     fetchStocks()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

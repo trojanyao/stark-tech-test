@@ -1,6 +1,7 @@
 'use client'
 
 import SectionTitle from '@/components/SectionTitle'
+import { useLoading } from '@/contexts/LoadingContext'
 import { Card, CardContent, Stack } from '@mui/material'
 import {
   DataGrid,
@@ -12,6 +13,7 @@ import { useEffect } from 'react'
 
 export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
   const apiRef = useGridApiRef()
+  const { loading } = useLoading()
 
   const dates = rawData.map((item: IRevenue) => {
     const date = new Date(item.date)
@@ -60,10 +62,12 @@ export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
   useEffect(() => {
     const maxColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1
 
-    if (apiRef.current && maxColIndex) {
+    if (apiRef.current && maxColIndex >= 0) {
       setTimeout(() => {
-        apiRef.current?.scrollToIndexes({ rowIndex: 0, colIndex: maxColIndex })
-      }, 100)
+        if (apiRef.current) {
+          apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: maxColIndex })
+        }
+      }, 1000)
     }
   }, [apiRef, rawData?.length])
 
@@ -82,6 +86,7 @@ export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
               apiRef={apiRef}
               rows={rows}
               columns={columns}
+              loading={loading}
               // pinnedColumns={{ left: ['label'] }} // Only available for Pro
               disableColumnSorting
               disableColumnMenu
