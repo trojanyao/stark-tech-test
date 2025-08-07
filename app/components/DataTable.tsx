@@ -2,7 +2,7 @@
 
 import SectionTitle from '@/components/SectionTitle'
 import { useLoading } from '@/contexts/LoadingContext'
-import { Box, Card, CardContent, Stack } from '@mui/material'
+import { Box, Card, CardContent, Stack, Typography } from '@mui/material'
 import {
   DataGrid,
   GridColDef,
@@ -100,6 +100,23 @@ export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
                 cell: { onClick: (e) => e.stopPropagation() }
               }}
             />
+
+            <Box
+              sx={{
+                mt: 1,
+                textAlign: 'right',
+                color: 'text.secondary',
+
+                lineHeight: 1.6
+              }}
+            >
+              <Typography component="div" sx={{ fontSize: 14 }}>
+                圖表單位：千元，數據來自公開資訊觀測站
+              </Typography>
+              <Typography component="div" sx={{ fontSize: 14 }}>
+                網頁圖表歡迎轉貼引用，請註明出處為財報狗
+              </Typography>
+            </Box>
           </div>
         </Stack>
       </CardContent>
