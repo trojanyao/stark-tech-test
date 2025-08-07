@@ -26,7 +26,7 @@ export default function DataTable({ rawData }: { rawData: IRevenue[] }) {
       acc[key] = item.revenue.toLocaleString('zh-TW')
       return acc
     },
-    { id: 'revenue', label: '月营收（元）' } as Record<string, unknown>
+    { id: 'revenue', label: '月营收（千元）' } as Record<string, unknown>
   )
   const rateRow = rawData.reduce(
     (acc, item) => {
