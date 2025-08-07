@@ -12,7 +12,7 @@ import {
   LinePlot
 } from '@mui/x-charts'
 
-export function Chart({ dataset }: { dataset: IRevenue[] }) {
+export function Chart({ dataset, children }: { dataset: IRevenue[]; children: React.ReactNode }) {
   // Convert IRevenue[] to the expected format for ChartContainer
   const formattedDataset = dataset.map((item) => ({
     ...item
@@ -25,7 +25,7 @@ export function Chart({ dataset }: { dataset: IRevenue[] }) {
           {/* Title */}
           <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
             <SectionTitle title="每月營收" />
-            <SectionTitle title="近五年" />
+            {children}
           </Stack>
 
           {/* Chart */}
@@ -46,12 +46,13 @@ export function Chart({ dataset }: { dataset: IRevenue[] }) {
                 id: 'left-revenue-axis',
                 scaleType: 'linear',
                 position: 'left',
-                width: 75
+                width: 80
               },
               {
                 id: 'right-rate-axis',
                 scaleType: 'linear',
-                position: 'right'
+                position: 'right',
+                width: 65
               }
             ]}
             series={[

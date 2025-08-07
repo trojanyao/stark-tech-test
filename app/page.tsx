@@ -9,9 +9,16 @@ import Title from './components/Title'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import { Chart } from './components/Chart'
+import ChartTimeRangeSelector from './components/ChartTimeRangeSelector'
 
 export default function Page() {
   const [selectedStock, setSelectedStock] = useState<IStock | null>(null)
+
+  const [{ start_date, end_date }, setTimeRange] = useState<{
+    start_date: string
+    end_date: string
+  }>({ start_date: '', end_date: '' })
+
   const [revenueData, setRevenueData] = useState<IRevenue[]>([])
 
   /* Get selected stock data */
@@ -20,9 +27,21 @@ export default function Page() {
       if (!selectedStock?.stock_id) return
 
       try {
-        const res = await fetch(
-          `/api/finmind?dataset=TaiwanStockMonthRevenue&data_id=${selectedStock?.stock_id}&start_date=2018-01-01&end_date=2023-12-31` // Adjust the date range as needed
-        )
+        const params = new URLSearchParams({
+          dataset: 'TaiwanStockMonthRevenue',
+          data_id: selectedStock?.stock_id
+        })
+
+        if (start_date) {
+          const date = new Date(start_date)
+          // fetch data from one year ago to calculate year-on-year growth rate
+          date.setFullYear(date.getFullYear() - 1)
+          const extendedStart = date.toISOString().slice(0, 10)
+          params.set('start_date', extendedStart)
+        }
+        if (end_date) params.set('end_date', end_date)
+
+        const res = await fetch(`/api/finmind?${params.toString()}`)
         const result = await res.json()
 
         const newData =
@@ -46,14 +65,18 @@ export default function Page() {
             return item
           }) || []
 
-        setRevenueData(newData)
+        const visibleData = newData.filter(
+          (item: IRevenue) => item?.date >= start_date && item?.date <= end_date
+        )
+
+        setRevenueData(visibleData)
       } catch (error) {
         throw new Error(`Error fetching stock data: ${error}`)
       }
     }
 
     getSelectedStockData()
-  }, [selectedStock?.stock_id])
+  }, [selectedStock?.stock_id, start_date, end_date])
 
   return (
     <Stack spacing={0} className="h-screen">
@@ -79,7 +102,11 @@ export default function Page() {
           <Title selectedStock={selectedStock} />
 
           {/* Chart */}
-          <Chart dataset={revenueData} />
+          <Chart dataset={revenueData}>
+            <ChartTimeRangeSelector
+              onChange={({ start_date, end_date }) => setTimeRange({ start_date, end_date })}
+            />
+          </Chart>
 
           {/* Table */}
           <Card>
