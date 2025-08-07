@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import Title from './components/Title'
 
 import { Chart } from './components/Chart'
-import ChartTimeRangeSelector from './components/ChartTimeRangeSelector'
+import ChartTimeRangeSelector from '../components/ChartTimeRangeSelector'
 import DataTable from './components/DataTable'
 import { useLoading } from '@/contexts/LoadingContext'
 
