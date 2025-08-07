@@ -3,10 +3,9 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-export type TimeRangeOption = '1M' | '3M' | '6M' | '1Y' | '3Y' | '5Y' | 'ALL'
+export type TimeRangeOption = '3M' | '6M' | '1Y' | '3Y' | '5Y' | 'ALL'
 
 const TIME_RANGE_LABELS: Record<TimeRangeOption, string> = {
-  '1M': '近1個月',
   '3M': '近3個月',
   '6M': '近6個月',
   '1Y': '近1年',
@@ -20,7 +19,7 @@ export default function ChartTimeRangeSelector({
 }: {
   onChange: (value: { start_date: string; end_date: string }) => void
 }) {
-  const [value, setValue] = useState<TimeRangeOption>('1M')
+  const [value, setValue] = useState<TimeRangeOption>('3M')
 
   useEffect(() => {
     const { start_date, end_date } = getDateRangeFromOption(value)
@@ -68,9 +67,6 @@ function getDateRangeFromOption(option: TimeRangeOption): {
   const start = new Date(today)
 
   switch (option) {
-    case '1M':
-      start.setMonth(start.getMonth() - 1)
-      break
     case '3M':
       start.setMonth(start.getMonth() - 3)
       break
